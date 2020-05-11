@@ -2,6 +2,7 @@ package com.cryolite.springbootweb.Controller;
 
 import com.cryolite.springbootweb.Dao.PersonRepository;
 import com.cryolite.springbootweb.Model.Person;
+import com.cryolite.springbootweb.Service.PersonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -23,27 +25,30 @@ public class PersonController {
     Logger logger = LoggerFactory.getLogger(PersonController.class);
 
     @Autowired
-    PersonRepository personRepository;
+    PersonServiceImpl personService;
 
     @GetMapping("createPerson")
-    public ResponseEntity<String> createPerson(Person person) {
+    public Boolean createPerson(Person person) {
         logger.info("createPerson : Person = " + person.toString());
-        ResponseEntity<String> responseEntity;
-        try {
-            personRepository.save(person);
-            responseEntity = new ResponseEntity<>(HttpStatus.ACCEPTED);
-        }catch (Exception e)
-        {
-           responseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return responseEntity;
+        return personService.createPerson(person);
     }
 
-    @GetMapping("getPerson")
+    @GetMapping("getPersonById")
     public Optional<Person> getPerson(@RequestParam("id") int id){
         logger.info("getPerson : Id = "+ id);
-        Optional<Person> person = personRepository.findById(id);
-        return person;
+        return personService.getPersonById(id);
+    }
+
+    @GetMapping("getPersonByName")
+    public Person getPerson(@RequestParam("name") String name){
+        logger.info("getPerson : name = "+ name);
+        return personService.getPersonByName(name);
+    }
+
+    @GetMapping("extractAllPersons")
+    public List<Person> extractPerson(){
+        logger.info("extractAllPersons");
+        return personService.extractAllPersons();
     }
 }
 
