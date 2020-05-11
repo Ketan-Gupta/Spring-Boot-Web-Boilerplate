@@ -5,6 +5,7 @@ import com.cryolite.springbootweb.Model.Person;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.jvm.hotspot.debugger.SymbolLookup;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,5 +42,15 @@ public class PersonServiceImpl {
 
     public List<Person> extractAllPersons(){
         return personRepository.extractAllPersons();
+    }
+
+    public Boolean deletePerson(int id){
+        try {
+            personRepository.deleteById(id);
+        }
+        catch(Exception e){
+            return false;
+        }
+        return true;
     }
 }

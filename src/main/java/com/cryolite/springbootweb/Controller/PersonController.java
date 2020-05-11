@@ -7,7 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,28 +31,34 @@ public class PersonController {
     @Autowired
     PersonServiceImpl personService;
 
-    @GetMapping("createPerson")
-    public Boolean createPerson(Person person) {
+    @PostMapping("/createPerson")
+    public Boolean createPerson(@RequestBody Person person) {
         logger.info("createPerson : Person = " + person.toString());
         return personService.createPerson(person);
     }
 
-    @GetMapping("getPersonById")
-    public Optional<Person> getPerson(@RequestParam("id") int id){
+    @GetMapping("/getPerson/id/{id}")
+    public Optional<Person> getPersonById(@PathVariable("id") int id){
         logger.info("getPerson : Id = "+ id);
         return personService.getPersonById(id);
     }
 
-    @GetMapping("getPersonByName")
-    public Person getPerson(@RequestParam("name") String name){
+    @GetMapping("/getPerson/name/{name}")
+    public Person getPersonByName(@PathVariable("name") String name){
         logger.info("getPerson : name = "+ name);
         return personService.getPersonByName(name);
     }
 
-    @GetMapping("extractAllPersons")
+    @GetMapping("/extractAllPersons")
     public List<Person> extractPerson(){
         logger.info("extractAllPersons");
         return personService.extractAllPersons();
+    }
+
+    @DeleteMapping("/deletePerson/id/{id}")
+    public Boolean deletePerson(@PathVariable int id){
+            logger.info("deletePerson : Id = "+id);
+            return personService.deletePerson(id);
     }
 }
 
